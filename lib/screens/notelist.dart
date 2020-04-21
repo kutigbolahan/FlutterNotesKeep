@@ -1,5 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:notes_keep/screens/notedetails.dart';
 
 class NoteList extends StatefulWidget {
   @override
@@ -24,7 +25,11 @@ class _NoteListState extends State<NoteList> {
       body: getNoteListView(),
       floatingActionButton: FloatingActionButton(
         backgroundColor:  Color(0xFFEAA4A4),
-        onPressed: (){},
+        onPressed: (){
+          Navigator.push(context, MaterialPageRoute(builder: (context){
+            return NoteDetails('Add Note');
+          }));
+        },
       tooltip: 'Add a Note',
       child: Icon(Icons.add),
       ),
@@ -48,6 +53,9 @@ class _NoteListState extends State<NoteList> {
                  subtitle: Text('Dummy Date', style:titlestyle),
                 trailing: Icon(Icons.delete, color: Colors.red,),
               onTap: (){
+                 Navigator.push(context, MaterialPageRoute(builder: (context){
+            return NoteDetails('Edit Note');
+          }));
                 print('object');
               },
                ),

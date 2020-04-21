@@ -17,7 +17,7 @@ class MyApp extends StatelessWidget {
         canvasColor: Colors.white,//const Color(0xFFEAA4A4),
         visualDensity: VisualDensity.adaptivePlatformDensity,
       ),
-      home: NoteDetails(),
+      home: NoteList(),
     );
   }
 }
