@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:notes_keep/screens/notedetails.dart';
 import 'package:notes_keep/screens/notelist.dart';
 
 void main() {
@@ -12,11 +13,11 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
       theme: ThemeData(
-        primaryColor: Colors.black,//const Color(0xFFEAA4A4),
-        canvasColor: const Color(0xFFEAA4A4),
+        primaryColor: const Color(0xFFEAA4A4),
+        canvasColor: Colors.white,//const Color(0xFFEAA4A4),
         visualDensity: VisualDensity.adaptivePlatformDensity,
       ),
-      home: NoteList(),
+      home: NoteDetails(),
     );
   }
 }

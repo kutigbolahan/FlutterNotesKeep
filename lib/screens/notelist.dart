@@ -16,13 +16,14 @@ class _NoteListState extends State<NoteList> {
         title: Center(
           child: Text(
             'NotesKeep',
+            style: TextStyle(color: Color(0xFF442B2D),),
           ),
         ),
 
       ),
       body: getNoteListView(),
       floatingActionButton: FloatingActionButton(
-        backgroundColor: Colors.black,
+        backgroundColor:  Color(0xFFEAA4A4),
         onPressed: (){},
       tooltip: 'Add a Note',
       child: Icon(Icons.add),
