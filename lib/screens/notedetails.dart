@@ -19,11 +19,11 @@ class _NoteDetailsState extends State<NoteDetails> {
     TextEditingController descEditingController = TextEditingController();
     return Scaffold(
       appBar: AppBar(
-        title: Center(child: Text(appBarTitle,
+        title: Text(appBarTitle,
         style: TextStyle(
           color: Color(0xFF442B2D),
         ),
-        )),
+        ),
       ),
       body: Padding(
         padding: EdgeInsets.only(top: 15.0, left: 10.0, right: 10.0),
