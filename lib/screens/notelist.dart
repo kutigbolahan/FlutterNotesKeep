@@ -4,6 +4,7 @@ import 'package:notes_keep/database/dbHelper.dart';
 import 'package:notes_keep/models/notes.dart';
 import 'package:notes_keep/screens/notedetails.dart';
 import 'package:provider/provider.dart';
+import 'package:sqflite/sqflite.dart';
 
 class NoteList extends StatefulWidget {
   @override
@@ -16,9 +17,10 @@ class _NoteListState extends State<NoteList> {
   int count = 0;
   @override
   Widget build(BuildContext context) {
-    final dbhelp = Provider.of<DatabaseHelper>(context);
+    //final dbhelp = Provider.of<DatabaseHelper>(context);
     if (noteList = null) {
       noteList = List<Note>();
+      updateListView();
     }
     return Scaffold(
       appBar: AppBar(
@@ -36,9 +38,7 @@ class _NoteListState extends State<NoteList> {
       floatingActionButton: FloatingActionButton(
         backgroundColor: Color(0xFFEAA4A4),
         onPressed: () {
-          Navigator.push(context, MaterialPageRoute(builder: (context) {
-            return NoteDetails('Add Note');
-          }));
+         navigateToDetail(Note('', '',  2, ), 'Add Note');
         },
         tooltip: 'Add a Note',
         child: Icon(Icons.add),
@@ -69,9 +69,7 @@ class _NoteListState extends State<NoteList> {
                 color: Colors.red,
               ),
               onTap: () {
-                Navigator.push(context, MaterialPageRoute(builder: (context) {
-                  return NoteDetails('Edit Note');
-                }));
+                navigateToDetail(this.noteList[position], 'Edit Note');
                 print('object');
               },
             ),
@@ -111,11 +109,29 @@ class _NoteListState extends State<NoteList> {
    int result =await Provider.of<DatabaseHelper>(context, listen: false).deleteNote(note.id);
    if (result != 0) {
      Scaffold.of(context).showSnackBar(SnackBar(content: Text('Note Deleted Successfully'), duration: Duration(seconds: 3),));  
+   updateListView();
    }
  }
 
 
+//function to update list view
+void updateListView(){
+final Future<Database> dbFuture =  Provider.of<DatabaseHelper>(context).initializeDatabase();
+dbFuture.then((database){
+  Future<List<Note>>noteListFuture = Provider.of<DatabaseHelper>(context).getNoteList();
+  noteListFuture.then((noteList) {
+    setState(() {
+      this.noteList = noteList;
+      this.count= noteList.length;
+    });
+  });
+});
+}
 
-
+void navigateToDetail(Note note, String title){
+  Navigator.push(context, MaterialPageRoute(builder: (context) {
+                  return NoteDetails(note,title);
+                }));
+}
 
 }

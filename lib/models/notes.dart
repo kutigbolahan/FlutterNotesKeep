@@ -1,13 +1,14 @@
 //help us to represent our database table
 
-class Note {
+ class Note {
   int id;
   String title;
   String description;
   String date;
   int priority;
 
-  Note(this.id, this.title, this.date, this.priority, this.description);
+  Note( this.title, this.date, this.priority, [this.description]);
+  Note.withId(this.id, this.title, this.date, this.priority, [this.description]);
 
   int get getid => id;
   String get gettitle => title;
@@ -53,7 +54,7 @@ class Note {
 
 //Extract a note object from a Map object
   Note.fromMapObject(Map<String, dynamic> map) {
-    this.id = map['title'];
+    this.id = map['id'];
     this.title = map['title'];
     this.description = map['description'];
     this.priority = map['priority'];

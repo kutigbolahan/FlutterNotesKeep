@@ -97,4 +97,18 @@ class DatabaseHelper with ChangeNotifier{
     int result = Sqflite.firstIntValue(x);
     return result;
   }
+
+  //get the map list [List<Map>] and convert it to note List [List<Note>]
+  Future<List<Note>> getNoteList()async{
+    //get map list from database
+    var noteMapList = await getNoteMapList();
+    //count the number of map entties in the db table
+    int count = noteMapList.length;
+    List<Note> noteList = List<Note>();
+    //for loop to create a note list from a map list
+    for(int i = 0; i < count; i++){
+      noteList.add(Note.fromMapObject(noteMapList[i]));
+    }
+    return noteList;
+  }
 }
