@@ -1,10 +1,11 @@
 import 'dart:io';
 
+import 'package:flutter/material.dart';
 import 'package:notes_keep/models/notes.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:sqflite/sqflite.dart';
 
-class DatabaseHelper {
+class DatabaseHelper with ChangeNotifier{
 //singleton DatabaseHelper
   static DatabaseHelper _databaseHelper;
 
@@ -40,7 +41,7 @@ class DatabaseHelper {
 
 //function to initialize our database
   Future<Database> initializeDatabase() async {
-    //get direcory path fo both android and ios to store our database
+    //get direcory path for both android and ios to store our database
     Directory directory = await getApplicationDocumentsDirectory();
     String path = directory.path + 'notes.db';
 
