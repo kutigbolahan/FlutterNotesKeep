@@ -24,6 +24,7 @@ class _NoteListState extends State<NoteList> {
     }
     return Scaffold(
       appBar: AppBar(
+        
         elevation: 0.0,
         leading: Padding(
           padding: const EdgeInsets.all(10.0),
