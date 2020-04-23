@@ -25,6 +25,10 @@ class _NoteListState extends State<NoteList> {
     return Scaffold(
       appBar: AppBar(
         elevation: 0.0,
+        leading: Padding(
+          padding: const EdgeInsets.all(10.0),
+          child: Image.asset('assets/images/1.png'),
+        ),
         title: Center(
           child: Text(
             'NotesKeep',
@@ -100,13 +104,13 @@ class _NoteListState extends State<NoteList> {
   Icon getPriorityIcon(int priority) {
     switch (priority) {
       case 1:
-        return Icon(Icons.play_arrow);
+        return Icon(Icons.error, color: Colors.white,);
         break;
       case 2:
-        return Icon(Icons.keyboard_arrow_right);
+        return Icon(Icons.fiber_manual_record,color: Colors.white,);
         break;
       default:
-        return Icon(Icons.keyboard_arrow_right);
+        return Icon(Icons.fiber_manual_record,color: Colors.white);
     }
   }
 
