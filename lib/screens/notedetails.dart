@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 import 'package:notes_keep/database/dbHelper.dart';
 import 'package:notes_keep/models/notes.dart';
 import 'package:provider/provider.dart';
@@ -23,6 +24,7 @@ class _NoteDetailsState extends State<NoteDetails> {
     this.appBarTitle,
   );
   static var _priorities = ['High', 'Low'];
+  final _globalKey = GlobalKey<ScaffoldState>();
 
   @override
   Widget build(BuildContext context) {
@@ -30,6 +32,7 @@ class _NoteDetailsState extends State<NoteDetails> {
     titleEditingController.text = note.title;
     descEditingController.text = note.description;
     return Scaffold(
+      key: _globalKey,
       appBar: AppBar(
         title: Text(
           appBarTitle,
@@ -55,7 +58,7 @@ class _NoteDetailsState extends State<NoteDetails> {
                   onChanged: (valueSelectedByUser) {
                     setState(() {
                       print('User selected $valueSelectedByUser');
-                   updatePriority(valueSelectedByUser);
+                      updatePriority(valueSelectedByUser);
                     });
                   }),
             ),
@@ -108,9 +111,9 @@ class _NoteDetailsState extends State<NoteDetails> {
                   ),
                   onPressed: () {
                     print('save button');
-                    // setState(() {
-
-                    // });
+                    setState(() {
+                      _save();
+                    });
                   },
                 ),
                 RaisedButton(
@@ -123,9 +126,9 @@ class _NoteDetailsState extends State<NoteDetails> {
                   ),
                   onPressed: () {
                     print('delete button');
-                    // setState(() {
-
-                    // });
+                    setState(() {
+                      _delete();
+                    });
                   },
                 )
               ],
@@ -135,6 +138,7 @@ class _NoteDetailsState extends State<NoteDetails> {
       ),
     );
   }
+
 //convert the string priority in the form of integer before saving it
   void updatePriority(String value) {
     switch (value) {
@@ -150,27 +154,71 @@ class _NoteDetailsState extends State<NoteDetails> {
 
 //convert the integer priority in the form of string priority and display to user in dropdown
 
-String getPriorityAsString(int value) {
-  String priority;
+  String getPriorityAsString(int value) {
+    String priority;
     switch (value) {
       case 1:
-       priority = _priorities[0];
+        priority = _priorities[0];
         break;
       case 2:
-        priority =_priorities[1];
+        priority = _priorities[1];
         break;
       default:
     }
     return priority;
   }
 
-  void updadeTitle(){
+  void updadeTitle() {
     note.title = titleEditingController.text;
   }
-  void updateDescriotion(){
+
+  void updateDescriotion() {
     note.description = descEditingController.text;
   }
-  
 
+  //save data to database
+  void _save() async {
+    moveToLastScreen();
+    note.date = DateFormat.yMMMd().format(DateTime.now());
+    int result;
+    if (note.id != null) {
+      result = await Provider.of<DatabaseHelper>(context, listen: false)
+          .updateNote(note);
+    } else {
+      result = await Provider.of<DatabaseHelper>(context, listen: false)
+          .insertNote(note);
+    }
+    
+    if (result != 0) {
+     _showSnackbar(context, 'Note Saved Successfully');
+    } else {
+      _showSnackbar(context, 'Problem saving note');
+    }
+    
+  }
+  void moveToLastScreen(){
+    Navigator.pop(context, true);
+  }
+
+//delete from database
+  void _delete() async {
+    moveToLastScreen();
+    if (note.id == null) {
+     _showSnackbar(context, 'No Note was deleted');
+      return;
+    }
+    int result = await Provider.of<DatabaseHelper>(context, listen: false)
+        .deleteNote(note.id);
+    if (result != 0) {
+      _showSnackbar(context, 'Note Deleted Successfully');
+    } else {
+      _showSnackbar(context, 'Error occurred while deleting note');
+    }
+  }
+
+  void _showSnackbar(BuildContext context, String message){
+    final snackBar = SnackBar(content: Text(message));
+    _globalKey.currentState.showSnackBar(snackBar);
+    
+  }
 }
-

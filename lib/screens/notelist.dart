@@ -12,13 +12,13 @@ class NoteList extends StatefulWidget {
 }
 
 class _NoteListState extends State<NoteList> {
- // DatabaseHelper databaseHelper = DatabaseHelper();
+  // DatabaseHelper databaseHelper = DatabaseHelper();
   List<Note> noteList;
   int count = 0;
   @override
   Widget build(BuildContext context) {
     //final dbhelp = Provider.of<DatabaseHelper>(context);
-    if (noteList = null) {
+    if (noteList == null) {
       noteList = List<Note>();
       updateListView();
     }
@@ -38,7 +38,13 @@ class _NoteListState extends State<NoteList> {
       floatingActionButton: FloatingActionButton(
         backgroundColor: Color(0xFFEAA4A4),
         onPressed: () {
-         navigateToDetail(Note('', '',  2, ), 'Add Note');
+          navigateToDetail(
+              Note(
+                '',
+                '',
+                2,
+              ),
+              'Add Note');
         },
         tooltip: 'Add a Note',
         child: Icon(Icons.add),
@@ -47,7 +53,6 @@ class _NoteListState extends State<NoteList> {
   }
 
   ListView getNoteListView() {
-
     return ListView.builder(
         itemCount: count,
         itemBuilder: (BuildContext context, int position) {
@@ -59,13 +64,13 @@ class _NoteListState extends State<NoteList> {
                 backgroundColor: getPriorityColor(noteList[position].priority),
                 child: getPriorityIcon(noteList[position].priority),
               ),
-              title: Text(noteList[position].title ),
+              title: Text(noteList[position].title),
               subtitle: Text(noteList[position].date),
               trailing: IconButton(
-                onPressed: (){
+                onPressed: () {
                   _delete(context, noteList[position]);
                 },
-               icon:Icon( Icons.delete),
+                icon: Icon(Icons.delete),
                 color: Colors.red,
               ),
               onTap: () {
@@ -87,9 +92,10 @@ class _NoteListState extends State<NoteList> {
         return Colors.yellow;
         break;
       default:
-      return  Colors.yellow;
+        return Colors.yellow;
     }
   }
+
   //return priority icon
   Icon getPriorityIcon(int priority) {
     switch (priority) {
@@ -100,38 +106,48 @@ class _NoteListState extends State<NoteList> {
         return Icon(Icons.keyboard_arrow_right);
         break;
       default:
-      return  Icon(Icons.keyboard_arrow_right);
+        return Icon(Icons.keyboard_arrow_right);
     }
   }
 
- //delete funtion through the icon
- void _delete(context, Note note)async{
-   int result =await Provider.of<DatabaseHelper>(context, listen: false).deleteNote(note.id);
-   if (result != 0) {
-     Scaffold.of(context).showSnackBar(SnackBar(content: Text('Note Deleted Successfully'), duration: Duration(seconds: 3),));  
-   updateListView();
-   }
- }
-
+  //delete funtion through the icon
+  void _delete(context, Note note) async {
+    int result = await Provider.of<DatabaseHelper>(context, listen: false)
+        .deleteNote(note.id);
+    if (result != 0) {
+      Scaffold.of(context).showSnackBar(SnackBar(
+        content: Text('Note Deleted Successfully'),
+        duration: Duration(seconds: 1),
+      ));
+      updateListView();
+    }
+  }
 
 //function to update list view
-void updateListView(){
-final Future<Database> dbFuture =  Provider.of<DatabaseHelper>(context).initializeDatabase();
-dbFuture.then((database){
-  Future<List<Note>>noteListFuture = Provider.of<DatabaseHelper>(context).getNoteList();
-  noteListFuture.then((noteList) {
-    setState(() {
-      this.noteList = noteList;
-      this.count= noteList.length;
+  void updateListView() {
+    final Future<Database> dbFuture =
+        Provider.of<DatabaseHelper>(context,listen: false).initializeDatabase();
+    dbFuture.then((database) {
+      Future<List<Note>> noteListFuture =
+          Provider.of<DatabaseHelper>(context, listen: false).getNoteList();
+      noteListFuture.then((noteList) {
+        setState(() {
+          this.noteList = noteList;
+          this.count = noteList.length;
+        });
+      });
     });
-  });
-});
-}
+  }
 
-void navigateToDetail(Note note, String title){
-  Navigator.push(context, MaterialPageRoute(builder: (context) {
-                  return NoteDetails(note,title);
-                }));
-}
+  void navigateToDetail(Note note, String title) async {
+    bool result =
+        await Navigator.push(context, MaterialPageRoute(builder: (context) {
+      return NoteDetails(note, title);
+    }));
 
+    if (result ==true) {
+      updateListView();
+      
+    }
+  }
 }
